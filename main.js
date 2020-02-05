@@ -3,6 +3,49 @@ var app = express();
 var Redis = require("ioredis");
 var yargs = require("yargs");
 
+var script ="import json\n\
+\n\
+def RegistrationArrToDict(registration, depth=0):\n\
+    if depth >= 2:\n\
+        return registration\n\
+    if type(registration) is not list:\n\
+        return registration\n\
+    d = {}\n\
+    for i in range(0, len(registration), 2):\n\
+        d[registration[i]] = RegistrationArrToDict(registration[i + 1], depth + 1)\n\
+    return d\n\
+\n\
+\n\
+def AggregateRes(k, a, r):\n\
+	r = RegistrationArrToDict(r)\n\
+	if a == {}:\n\
+		lastError = r['RegistrationData']['lastError']\n\
+		r['RegistrationData']['lastError'] = []\n\
+		if lastError != [None] and lastError != None:\n\
+			if isinstance(lastError, list):\n\
+				r['RegistrationData']['lastError'] += lastError\n\
+			else:\n\
+				r['RegistrationData']['lastError'] += [lastError]\n\
+		return r\n\
+	a['RegistrationData']['numTriggered'] += r['RegistrationData']['numTriggered']\n\
+	a['RegistrationData']['numSuccess'] += r['RegistrationData']['numSuccess']\n\
+	a['RegistrationData']['numFailures'] += r['RegistrationData']['numFailures']\n\
+	a['RegistrationData']['numAborted'] += r['RegistrationData']['numAborted']\n\
+	if r['RegistrationData']['lastError'] != [None] and r['RegistrationData']['lastError'] != None:\n\
+		if isinstance(r['RegistrationData']['lastError'], list):\n\
+			a['RegistrationData']['lastError'] += r['RegistrationData']['lastError']\n\
+		else:\n\
+			a['RegistrationData']['lastError'] += [r['RegistrationData']['lastError']]\n\
+	return a\n\
+\n\
+\n\
+\n\
+GB('ShardsIDReader')\\\n\
+.flatmap(lambda x: execute('RG.DUMPREGISTRATIONS'))\\\n\
+.aggregateby(lambda x: x[1], {}, AggregateRes, AggregateRes)\\\n\
+.map(lambda x: x['value'])\\\n\
+.map(lambda x: json.dumps(x)).run()\n"
+
 var argv = yargs
     .usage('Usage: $0 --host [host (default localhost)] --port [port (default 6379)] --password [password (default no password)] --bind_port [bind_port (default 9001)]')
     .options({
@@ -44,7 +87,12 @@ var redis = new Redis({
 
 
 app.get('/dumpregistrations',function(req,res){
-	redis.call('RG.DUMPREGISTRATIONS', [], function(err, value) { 
+	redis.call('RG.PYEXECUTE', [script], function(err, value) {
+		if(err){
+			console.log(err);
+			res.json({'error':err});
+			return;	
+		}
 		res.json(value);
 	});
 });

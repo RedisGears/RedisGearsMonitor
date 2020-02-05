@@ -24,10 +24,10 @@ app.controller('myCtrl', function($scope, $http) {
 	$scope.RefreshInterval = 1
 
 	$scope.Refresh = function(response) {
-		res = response['data'];
+		res = response['data'][0];
 		var registrations = []
 		res.forEach(function(e){
-			var eDict = GeDictionaryFromArray(e, 0);
+			var eDict = JSON.parse(e);
 			var oldDict = $scope.registrations.filter(function(e){
 				return e['id'] == eDict['id'];
 			});
@@ -42,7 +42,9 @@ app.controller('myCtrl', function($scope, $http) {
 			}
 			registrations.push(eDict);
 		});
-		$scope.registrations = registrations
+		$scope.registrations = registrations.sort(function (a,b){
+			return a['id'].localeCompare(b['id']);
+		});
 	};
 
 	$scope.DoRefresh = function() {
