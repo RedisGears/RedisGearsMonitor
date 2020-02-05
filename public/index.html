@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.4.1.slim.min.js"></script>
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="js/angular.min.js"></script>
+    <script src="js/index.js"></script>
+
+    <title>RedisGearsUI</title>
+  </head>
+  <body>
+
+    <div class="container">
+      <div ng-app="myApp" ng-controller="myCtrl">
+
+          <h2>RedisGears Registrations</h2>
+
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Refresh Interval : {{RefreshInterval}} seconds
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#" ng-click="RefreshInterval=1">1 second</a>
+              <a class="dropdown-item" href="#" ng-click="RefreshInterval=5">5 second</a>
+              <a class="dropdown-item" href="#" ng-click="RefreshInterval=10">10 second</a>
+              <a class="dropdown-item" href="#" ng-click="RefreshInterval=60">60 second</a>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="{{x['class']}}" role="alert" ng-repeat="x in registrations">
+                  <button type="button" class="btn btn-secondary" ng-click="Unregister(x['id'])">Unregister</button>
+                  <div>
+                    <div class="card card-body">
+                      <ul class="list-unstyled">
+                        <li><strong>id</strong> : {{x['id']}}</li>
+                        <li><strong>desc</strong> : {{x['desc']}}</li>
+                        <li><strong>reader</strong> : {{x['reader']}}</li>
+                        <li><strong>RegistrationData</strong> :
+                          <ul>
+                            <li ng-show="x['RegistrationData']['status']!=null"><strong>status</strong> : {{x['RegistrationData']['status']}}</li>
+                            <li><strong>mode</strong> : {{x['RegistrationData']['mode']}}</li>
+                            <li><strong>numTriggered</strong> : {{x['RegistrationData']['numTriggered']}}</li>
+                            <li><strong>numSuccess</strong> : {{x['RegistrationData']['numSuccess']}}</li>
+                            <li><strong>numFailures</strong> : {{x['RegistrationData']['numFailures']}}</li>
+                            <li><strong>numAborted</strong> : {{x['RegistrationData']['numAborted']}}</li>
+                            <li><strong>lastError</strong> : {{x['RegistrationData']['lastError']}}</li>
+                            <li><strong>args</strong> : {{x['RegistrationData']['args']}}</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </body>
+</html>
