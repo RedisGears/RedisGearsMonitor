@@ -1,5 +1,5 @@
-# RedisGearsRegistrationGui
-Redis Gears Simple Registration Gui
+# RedisGearsMonitor
+Redis Gears Simple Monitor Gui
 
 # Install & Run
 ```
