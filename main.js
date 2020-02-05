@@ -6,7 +6,7 @@ var yargs = require("yargs");
 var script ="import json\n\
 \n\
 def RegistrationArrToDict(registration, depth=0):\n\
-    if depth >= 2:\n\
+    if depth >= 3:\n\
         return registration\n\
     if type(registration) is not list:\n\
         return registration\n\
