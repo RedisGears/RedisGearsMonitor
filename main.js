@@ -21,12 +21,14 @@ def AggregateRes(k, a, r):\n\
 	if a == {}:\n\
 		lastError = r['RegistrationData']['lastError']\n\
 		r['RegistrationData']['lastError'] = []\n\
+		r['NumShards']=1\n\
 		if lastError != [None] and lastError != None:\n\
 			if isinstance(lastError, list):\n\
 				r['RegistrationData']['lastError'] += lastError\n\
 			else:\n\
 				r['RegistrationData']['lastError'] += [lastError]\n\
 		return r\n\
+	a['NumShards']+=1\n\
 	a['RegistrationData']['numTriggered'] += r['RegistrationData']['numTriggered']\n\
 	a['RegistrationData']['numSuccess'] += r['RegistrationData']['numSuccess']\n\
 	a['RegistrationData']['numFailures'] += r['RegistrationData']['numFailures']\n\
