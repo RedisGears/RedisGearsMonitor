@@ -41,11 +41,21 @@ def AggregateRes(k, a, r):\n\
 	return a\n\
 \n\
 \n\
+def CheckNumShardSanity(r):\n\
+	numShards = execute('RG.INFOCLUSTER')\n\
+	if numShards == 'no cluster mode':\n\
+		return\n\
+	numShards = len(numShards[2])\n\
+	if r['NumShards'] != numShards:\n\
+		r['RegistrationData']['lastError'] += ['Warning: not all shards contains the registration.']\n\
+\n\
+\n\
 \n\
 GB('ShardsIDReader')\\\n\
 .flatmap(lambda x: execute('RG.DUMPREGISTRATIONS'))\\\n\
 .aggregateby(lambda x: x[1], {}, AggregateRes, AggregateRes)\\\n\
 .map(lambda x: x['value'])\\\n\
+.foreach(CheckNumShardSanity)\\\n\
 .map(lambda x: json.dumps(x)).run()\n"
 
 var argv = yargs
