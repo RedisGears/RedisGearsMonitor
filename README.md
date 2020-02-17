@@ -1,4 +1,3 @@
-# RedisGearsMonitor
 ![Monitor Example](image/example.png)
 
 # Install & Run
