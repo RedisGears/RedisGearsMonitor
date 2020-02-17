@@ -1,5 +1,6 @@
 # RedisGearsMonitor
 Redis Gears Simple Monitor Gui
+![Monitor Example](image/example.png)
 
 # Install & Run
 ```
