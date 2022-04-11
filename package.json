@@ -1,4 +1,6 @@
 {
+	"name": "redisgearsmonitor",
+	"version": "0.1.0",
 	"description": "RedisGear registrations simple GUI",
 	"repository": "https://github.com/RedisGears/RedisGearsMonitor",
 	"license": "BSD 3",
